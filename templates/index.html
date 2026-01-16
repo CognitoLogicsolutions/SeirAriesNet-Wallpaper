@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Anthem Portfolio</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
+        #chat-box { border: 1px solid #0f0; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        input { background: #111; color: #0f0; border: 1px solid #0f0; width: 80%; padding: 10px; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>THE LEGENDARY WITNESS</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Ask the Guardian of the Path...">
+    <button onclick="sendMessage()">SEND</button>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<p><b>You:</b> ${input.value}</p>`;
+            
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: input.value})
+            });
+            const data = await response.json();
+            box.innerHTML += `<p><b>Witness:</b> ${data.response}</p>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
+</body>
+</html>
