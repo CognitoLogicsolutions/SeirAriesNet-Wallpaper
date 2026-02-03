@@ -34,3 +34,61 @@
         </div>
         <div id="asset-container"></div>
     </div>
+
+    <script>
+        const bg = document.getElementById('bg');
+        bg.style.backgroundImage = `url('https://images.unsplash.com/photo-1568707510643-18ef80a6ba0a?auto=format&fit=crop&w=1920&q=80')`;
+
+        let totalValue = Number(localStorage.getItem('paul_bank_balance') || 0);
+        let autoMinerInterval = null;
+
+        function updateUI() {
+            document.getElementById('balance-display').textContent = `$${totalValue.toLocaleString()}`;
+            localStorage.setItem('paul_bank_balance', totalValue);
+        }
+
+        function logEvent(msg) {
+            const container = document.getElementById('asset-container');
+            const line = document.createElement('div');
+            line.className = 'asset-line';
+            line.textContent = `[${new Date().toLocaleTimeString()}] > ${msg}`;
+            container.appendChild(line);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function mine() {
+            totalValue += 1;
+            updateUI();
+            logEvent(`Sovereign Asset Secured. Current: $${totalValue}`);
+        }
+
+        document.getElementById('mine-asset-btn').addEventListener('click', mine);
+
+        document.getElementById('auto-btn').addEventListener('click', () => {
+            if (autoMinerInterval) {
+                clearInterval(autoMinerInterval);
+                autoMinerInterval = null;
+                logEvent("AUTO-MINER TERMINATED.");
+            } else {
+                autoMinerInterval = setInterval(mine, 2000);
+                logEvent("AUTO-MINER INITIALIZED...");
+            }
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if(confirm("Confirm System Wipe?")) {
+                totalValue = 0;
+                updateUI();
+                document.getElementById('asset-container').innerHTML = '';
+                logEvent("SYSTEM ZEROED.");
+            }
+        });
+
+        document.getElementById('print-btn').addEventListener('click', () => window.print());
+
+        // Initialization
+        updateUI();
+        logEvent("AraNet Sovereign Terminal Online. Welcome, Architect Martinez.");
+    </script>
+</body>
+</html>
